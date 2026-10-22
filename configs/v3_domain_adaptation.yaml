@@ -1,0 +1,6 @@
+# V3 - domain adaptation only: CPT encoder -> B1 (OOD labelled) -> B2 (CV train).
+variant: "V3"
+training_set: "cv"
+init: "cpt"                 # start from models/cpt_encoder
+stage_b1: true
+mask_time_prob: 0.05

@@ -1,0 +1,116 @@
+# Shared settings for every stage and every variant (V1-V4).
+# Merge order: base.yaml -> variant/stage config -> --set key=value overrides.
+seed: 42
+run_name: "main"
+
+paths:
+  input_root: "/kaggle/input"            # searched recursively for datasets
+  work_root: "/kaggle/working"           # persisted outputs (Kaggle "Output")
+  work_dir: "${paths.work_root}"
+  tmp_dir: "/tmp/yoruba_asr"             # extraction/cache (not persisted)
+  results_dir: "${paths.work_dir}/results"
+  models_dir: "${paths.work_dir}/models"
+  cache_dir: "${paths.work_dir}/cache"
+  shared_dir: "${paths.work_dir}/shared"
+  manifests_dir: "${paths.work_dir}/manifests"
+  checkpoints_dir: "${paths.work_dir}/checkpoints"
+  augmented_dir: "${paths.work_dir}/augmented"
+  extract_archives: true
+
+data:
+  common_voice:
+    release: "27.0"
+    locate_by: "train.tsv"               # find folder containing this file
+    dir: null                            # optional explicit folder
+  # Main (train/dev/test) corpus: "auto" = Common Voice when attached and complete, otherwise OpenSLR 86;
+  # "common_voice" or "slr86" to force one. With "slr86", OpenSLR 86 is split by speaker (80/10/10).
+  primary: "auto"
+  slr86: { enabled: true, dir: null, force_include: false, download: true,
+           split: { dev_share: 0.1, test_share: 0.1 } }
+  iroyin: { enabled: true, manifest: null, dir: null, force_include: false }   # manifest CSV if not auto-detected
+  bibletts: { enabled: false, dir: null }
+  musan: { dir: null }                   # optional noise corpus for augmentation
+  rirs: { dir: null }                    # optional real room impulse responses
+  min_seconds: 0.5
+  max_seconds: 15
+  sampling_rate: 16000
+  trim_top_db: 30
+  drop_digits: true                      # utterances with digits are dropped and logged
+  tone_gate_max_toneless_share: 0.20     # OOD corpus quality gate (Section 8.5)
+  limit: { train: null, dev: null, test: null, other: null, ood: null, unlabelled: null }
+
+text:
+  keep_tones: true                       # training targets keep tone marks
+  normal_form: "NFC"
+
+model:
+  name: "facebook/wav2vec2-xls-r-300m"
+  attention_dropout: 0.0
+  hidden_dropout: 0.0
+  feat_proj_dropout: 0.0
+  layerdrop: 0.0
+  mask_time_prob: 0.05
+  mask_time_length: 10
+  mask_feature_prob: 0.0
+  ctc_loss_reduction: "mean"
+  ctc_zero_infinity: true
+  freeze_feature_encoder: true
+  gradient_checkpointing: true
+
+train:
+  per_device_train_batch_size: 8
+  gradient_accumulation_steps: 4
+  per_device_eval_batch_size: 8
+  learning_rate: 3.0e-4
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  weight_decay: 0.0
+  warmup_steps: 150
+  max_steps: 3000
+  eval_steps: 200
+  save_steps: 200
+  logging_steps: 50
+  save_total_limit: 2
+  fp16: true                             # only used when a CUDA GPU is present
+  group_by_length: true
+  metric_for_best_model: "wer"
+  time_budget_hours: 11.0                # stop & checkpoint before Kaggle's 12 h limit
+  dataloader_num_workers: 2
+  keep_checkpoints: false                # delete checkpoints once the best model is saved
+
+augment:
+  copies_per_clip: 2
+  transforms: ["tempo", "noise", "reverb", "gain"]
+  transform_prob: 0.5
+  tempo_factors: [0.9, 1.1]
+  speed_factors: [0.9, 1.1]              # ablation only (changes pitch)
+  snr_db: [10, 30]
+  rt60: [0.2, 0.8]
+  gain_db: [-6, 6]
+  rir_bank_size: 64
+  pitch_check_clips: 20
+  pitch_check_max_rel_diff: 0.03
+
+tts:
+  enabled: true
+  model: "facebook/mms-tts-yor"          # CC BY-NC 4.0 - research use only
+  max_per_real_clip: 1.0
+  listening_sample: 50
+
+mask_tuning:
+  candidates: [0.05, 0.075, 0.10]
+  max_steps: 1000
+  skip: false
+  default_if_skipped: 0.075
+
+adapt:
+  b1_max_steps: 2000
+  cleanup_b1_after_v4: true
+
+eval:
+  bootstrap_resamples: 1000
+  ci: 0.95
+  batch_size: 8
+  pairs: [["V2", "V1"], ["V3", "V1"], ["V4", "V1"], ["V4", "V2"], ["V4", "V3"]]
+  n_examples: 20

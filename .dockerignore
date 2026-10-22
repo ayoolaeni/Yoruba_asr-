@@ -1,0 +1,16 @@
+.venv/
+.git/
+**/__pycache__/
+*.pyc
+*.egg-info/
+models/
+results/
+tests/
+kaggle/
+docs/
+scripts/
+configs/
+_smoke/
+_nb_local/
+*.zip
+*.ipynb

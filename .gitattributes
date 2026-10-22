@@ -1,0 +1,7 @@
+*.bat text eol=crlf
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.wav binary
+*.png binary
+*.safetensors binary

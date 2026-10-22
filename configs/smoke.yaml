@@ -1,0 +1,51 @@
+# Tiny settings for CPU tests and the Kaggle smoke run. Layer this on top of any other config.
+run_name: "smoke"
+paths:
+  work_dir: "${paths.work_root}/smoke"
+data:
+  limit: { train: 32, dev: 16, test: 16, other: 16, ood: 16, unlabelled: 32 }
+  slr86: { download: false }
+model:
+  name: "tiny-random"          # tiny randomly-initialised Wav2Vec2 (no download)
+train:
+  max_steps: 10
+  eval_steps: 5
+  save_steps: 5
+  logging_steps: 5
+  warmup_steps: 2
+  learning_rate: 1.0e-3
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 1
+  per_device_eval_batch_size: 4
+  fp16: false
+  dataloader_num_workers: 0
+  time_budget_hours: 1.0
+augment:
+  pitch_check_clips: 4
+  rir_bank_size: 4
+tts:
+  model: "dummy"               # offline stand-in synthesiser; the real run uses MMS-TTS
+  listening_sample: 4
+mask_tuning:
+  max_steps: 4
+adapt:
+  b1_max_steps: 6
+  cleanup_b1_after_v4: false
+cpt:
+  max_steps: 10
+  max_total_hours: 1.0
+  per_device_batch_size: 2
+  gradient_accumulation_steps: 1
+  warmup_steps: 2
+  learning_rate: 1.0e-3
+  checkpoint_every: 5
+  log_every: 2
+  fp16: false
+  num_workers: 0
+  time_budget_hours: 1.0
+ablation:
+  max_steps: 4
+eval:
+  bootstrap_resamples: 200
+  batch_size: 4
+  n_examples: 3

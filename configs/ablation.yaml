@@ -1,0 +1,16 @@
+# Leave-one-out ablation of V2 (Section 15.5). Every run is compared with v2_ref (same 1,500 steps).
+variant: "V2"
+training_set: "cv_aug"
+init: "pretrained"
+stage_b1: false
+mask_time_prob: "tuned"
+ablation:
+  max_steps: 1500
+  runs:
+    v2_ref: {}
+    no_tempo: { remove_transform: "tempo" }
+    no_noise: { remove_transform: "noise" }
+    no_reverb: { remove_transform: "reverb" }
+    no_tts: { use_tts: false }
+    no_tuned_mask: { mask_time_prob: 0.05 }
+    plus_speed: { add_transform: "speed" }   # pitch-changing speed perturbation

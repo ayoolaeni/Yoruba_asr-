@@ -1,0 +1,29 @@
+# Continued self-supervised pretraining (wav2vec 2.0 objective) - Stage A of domain adaptation.
+cpt:
+  max_steps: 12000              # upper bound; the run also stops at max_total_hours
+  max_total_hours: 20.0         # total GPU budget across sessions (two Kaggle sessions)
+  per_device_batch_size: 4
+  gradient_accumulation_steps: 8   # effective 32 crops
+  learning_rate: 5.0e-5
+  warmup_steps: 500
+  weight_decay: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.98
+  adam_epsilon: 1.0e-6
+  mask_time_prob: 0.65
+  mask_time_length: 10
+  diversity_loss_weight: 0.1
+  max_gumbel_temperature: 2.0
+  min_gumbel_temperature: 0.5
+  gumbel_temperature_decay: 0.999995
+  max_grad_norm: 1.0
+  max_crop_seconds: 15
+  checkpoint_every: 500
+  log_every: 50
+  fp16: true
+  freeze_feature_encoder: true
+  gradient_checkpointing: true
+  perplexity_floor: 2.0
+  perplexity_patience: 500
+  time_budget_hours: 11.0
+  num_workers: 2

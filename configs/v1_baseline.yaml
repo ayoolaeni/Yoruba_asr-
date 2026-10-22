@@ -1,0 +1,6 @@
+# V1 - source-only baseline: no augmentation, no domain adaptation.
+variant: "V1"
+training_set: "cv"          # cv = Common Voice train only
+init: "pretrained"          # start from facebook/wav2vec2-xls-r-300m
+stage_b1: false
+mask_time_prob: 0.05

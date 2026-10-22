@@ -1,0 +1,6 @@
+# V2 - augmentation only: CV train + 2 tone-preserving augmented copies + MMS-TTS clips.
+variant: "V2"
+training_set: "cv_aug"      # CV train + augmented + TTS
+init: "pretrained"
+stage_b1: false
+mask_time_prob: "tuned"     # read from results/V2/mask_tuning.json

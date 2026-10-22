@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yoruba-asr"
+version = "1.0.0"
+description = "Yoruba ASR with XLS-R: hybrid data augmentation and domain adaptation (V1-V4 factorial study)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Bolaji Oluseye" }]
+dependencies = [
+    "torch",
+    "transformers>=4.45",
+    "datasets>=2.19",
+    "accelerate>=0.30",
+    "jiwer>=3.0",
+    "librosa>=0.10",
+    "soundfile>=0.12",
+    "pandas",
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "tqdm",
+    "typer>=0.9",
+]
+
+[project.optional-dependencies]
+augment = ["pyroomacoustics>=0.7"]
+app = ["gradio>=4.0"]
+dev = ["pytest>=7", "nbformat>=5", "nbconvert>=7", "ipykernel"]
+
+[project.scripts]
+yoruba-asr = "yoruba_asr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning", "ignore::UserWarning"]

@@ -1,0 +1,6 @@
+# V4 - hybrid: CPT encoder -> B1 (OOD labelled, shared with V3) -> B2 on the V2 training set.
+variant: "V4"
+training_set: "cv_aug"
+init: "cpt"
+stage_b1: true
+mask_time_prob: "tuned"

@@ -1,0 +1,207 @@
+=====================================================================
+  YORUBA SPEECH RECOGNITION - HOW TO RUN THE APPLICATION
+=====================================================================
+
+This application turns spoken Yoruba into written Yoruba text, with
+tone marks (for example: "Ọmọ náà ń lọ sí ilé ìwé"). It runs entirely
+on your own computer inside Docker. Your audio is never sent anywhere.
+
+It contains four trained speech-recognition models:
+  V1  Baseline
+  V2  With data augmentation
+  V3  With domain adaptation
+  V4  Hybrid (augmentation + domain adaptation)  <- the most accurate
+
+
+---------------------------------------------------------------------
+WHAT YOU NEED
+---------------------------------------------------------------------
+  * A computer with Windows 10/11 (64-bit), macOS, or Linux
+  * At least 8 GB of RAM (16 GB recommended)
+  * About 15 GB of free disk space
+  * An internet connection for the FIRST start only (about 1.5 GB is
+    downloaded once). After that it works offline.
+  * Docker Desktop (free), installed as described in STEP 1
+
+
+---------------------------------------------------------------------
+STEP 1 - INSTALL DOCKER DESKTOP (only once)
+---------------------------------------------------------------------
+  1. Go to  https://www.docker.com/products/docker-desktop/
+  2. Download Docker Desktop for your system (Windows / Mac) and run
+     the installer. Accept the default options.
+       - Windows: if the installer asks about "WSL 2", keep it ticked.
+         Restart the computer if it asks you to.
+  3. Open Docker Desktop from the Start menu (or Applications on Mac).
+     Accept the terms. You can skip signing in.
+  4. Wait until Docker Desktop shows "Engine running" (a green
+     indicator at the bottom-left). Leave Docker Desktop open.
+
+
+---------------------------------------------------------------------
+STEP 2 - UNZIP THE PACKAGE
+---------------------------------------------------------------------
+  1. Copy the file  Yoruba_ASR_Client_Package.zip  to your computer,
+     for example to the Desktop.
+  2. Right-click it -> "Extract All..." -> Extract.
+     (On Mac: double-click the zip.)
+  3. Open the extracted folder "Yoruba_ASR_Client_Package". You should
+     see, among others:
+         START_WINDOWS.bat
+         STOP_WINDOWS.bat
+         HOW_TO_RUN.txt   (this file)
+         models\          (the four trained models, about 5 GB)
+         app\  src\  results\
+         Dockerfile  docker-compose.yml
+
+  Important: keep all files together in this folder. Do not move
+  START_WINDOWS.bat out of it.
+
+
+---------------------------------------------------------------------
+STEP 3 - START THE APPLICATION
+---------------------------------------------------------------------
+  WINDOWS:
+    1. Make sure Docker Desktop is open and shows "Engine running".
+    2. Double-click  START_WINDOWS.bat
+       (If Windows shows "Windows protected your PC", click
+        "More info" -> "Run anyway".)
+    3. A black window opens and shows the progress.
+       - The FIRST time, it downloads and builds everything:
+         this takes about 5-15 minutes. Please wait.
+       - Later starts take only a few seconds.
+    4. When it says READY, your web browser opens automatically at
+           http://localhost:7870
+       If it does not open, type that address into your browser.
+
+  MAC / LINUX:
+    1. Open the Terminal in the extracted folder.
+    2. Run:   bash start_mac_linux.sh
+    3. Open   http://localhost:7870   in your browser.
+
+
+---------------------------------------------------------------------
+STEP 4 - USE THE APPLICATION
+---------------------------------------------------------------------
+  The page has four tabs:
+
+  1) TRANSCRIBE
+     - Click the upload area to choose an audio file (wav, mp3, m4a,
+       ogg or flac, up to 30 seconds), OR click the microphone icon
+       and record yourself speaking Yoruba, OR click one of the demo
+       clips (demo_1.wav ...).
+     - Choose a model in the "Model" menu (V4 is selected by default
+       and is the most accurate).
+     - Click the orange "Transcribe" button.
+     - You get the text WITH tone marks and WITHOUT tone marks.
+     - Optional: type the correct sentence into "Reference text" to
+       see the error rates for that clip, with the differences
+       highlighted.
+     Note: the very first transcription takes about 15 seconds
+     because the model is loaded into memory. After that, each clip
+     takes a few seconds.
+
+  2) COMPARE MODELS
+     Runs the same audio through all four models and shows the
+     results side by side.
+
+  3) RESULTS
+     The accuracy of each model on the official test set, the
+     statistical tests and the charts.
+
+  4) ABOUT
+     Information about the project, the data and the licences.
+
+  MICROPHONE: if the page says "No microphone found", plug in a
+  microphone/headset, allow microphone access for your browser
+  (Windows: Settings -> Privacy & security -> Microphone), then
+  reload the page (F5). You can always upload a file instead.
+
+
+---------------------------------------------------------------------
+STEP 5 - STOP THE APPLICATION
+---------------------------------------------------------------------
+  WINDOWS:     double-click  STOP_WINDOWS.bat
+  MAC/LINUX:   bash stop_mac_linux.sh
+
+  To use it again later: open Docker Desktop, then run
+  START_WINDOWS.bat again (it starts in a few seconds).
+
+  Note: while Docker Desktop is running, the application also
+  restarts by itself after a computer restart. Stop it with
+  STOP_WINDOWS.bat if you do not want that.
+
+
+---------------------------------------------------------------------
+PROBLEMS AND SOLUTIONS
+---------------------------------------------------------------------
+  "Docker Desktop is NOT running"
+     -> Open Docker Desktop, wait for "Engine running", try again.
+
+  "The folder models is missing or incomplete"
+     -> The zip was not fully extracted, or the models folder was
+        moved. Extract the zip again and check that models\V1,
+        models\V2, models\V3 and models\V4 each contain a file
+        called model.safetensors (about 1.2 GB each).
+
+  The first start fails while downloading
+     -> Check the internet connection and run START_WINDOWS.bat
+        again. It continues where it stopped.
+
+  "port is already allocated" / the page shows another application
+     -> Another program uses port 7870. Open docker-compose.yml with
+        Notepad, change the line  "7870:7870"  to  "7880:7870",
+        save, run START_WINDOWS.bat again, and open
+        http://localhost:7880 instead.
+
+  The page opens but says "No trained models were found"
+     -> Same as the models problem above. After fixing it, click
+        "Refresh model status" on the page.
+
+  Transcription is slow
+     -> Normal on the first clip (model loading, ~15 s). If every
+        clip is very slow, close other heavy programs. In Docker
+        Desktop -> Settings -> Resources you can give Docker more
+        memory (at least 6 GB recommended).
+
+  To see what the application is doing (for technical support):
+     open a Command Prompt in the folder and run
+        docker compose logs --tail 100
+
+
+---------------------------------------------------------------------
+ABOUT THE MODELS (accuracy on 1,096 test recordings)
+---------------------------------------------------------------------
+  Model  Word error  Character error  Tone error
+  V1       58.5 %        20.4 %          19.3 %
+  V2       54.9 %        19.5 %          19.2 %
+  V3       48.3 %        16.6 %          16.6 %
+  V4       46.8 %        16.2 %          16.4 %   <- best
+  (lower is better)
+
+  The models were trained on read Yoruba speech (Mozilla Common Voice
+  27.0 and the Google Yoruba speech corpus, OpenSLR 86). They work
+  best on clear, read speech in Standard Yoruba. Accuracy is lower
+  for noisy recordings, very fast or spontaneous speech, dialects,
+  and English words or names mixed into Yoruba.
+
+  Base model: facebook/wav2vec2-xls-r-300m (Apache 2.0).
+  Demo clips were generated with facebook/mms-tts-yor
+  (CC BY-NC 4.0: research and demonstration use only).
+
+
+---------------------------------------------------------------------
+FOR DEVELOPERS
+---------------------------------------------------------------------
+  * Docker image: built from the Dockerfile in this folder (Python
+    3.11, CPU PyTorch 2.7.1, transformers 4.57.0, Gradio 5.50).
+  * The models are mounted from .\models and the results from
+    .\results (see docker-compose.yml); they are not inside the image.
+  * Each model folder is a standard Hugging Face Wav2Vec2ForCTC model.
+    Use it from Python:
+        from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+        processor = Wav2Vec2Processor.from_pretrained("models/V4")
+        model = Wav2Vec2ForCTC.from_pretrained("models/V4")
+    Input: 16 kHz mono audio. Decoding: greedy CTC (argmax).
+  * Source code: https://github.com/ayoolaeni/Yoruba_asr-
+=====================================================================

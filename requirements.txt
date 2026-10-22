@@ -1,0 +1,25 @@
+# Local / development environment (CPU is fine). Tested with Python 3.13 on Windows 11.
+# Install PyTorch first if you do not have it: https://pytorch.org/get-started/locally/
+torch==2.7.1
+transformers==4.57.0
+huggingface-hub==0.36.2
+tokenizers==0.22.1
+datasets==4.1.1
+accelerate==1.10.1
+safetensors==0.5.3
+jiwer==4.0.0
+librosa==0.11.0
+soundfile==0.14.0
+pyroomacoustics==0.10.1
+pandas==2.2.3
+numpy==2.2.4
+scipy==1.16.0
+matplotlib==3.10.1
+PyYAML==6.0.2
+tqdm==4.67.1
+typer==0.16.0
+gradio==5.50.0          # gradio 6 needs huggingface-hub>=1.16, which transformers 4.57 does not support
+pytest==9.1.1
+nbformat==5.11.1
+nbconvert==7.17.2
+ipykernel==7.4.0

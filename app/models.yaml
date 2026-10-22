@@ -1,0 +1,13 @@
+# Maps each variant to a local model folder (relative to the repository root, or absolute)
+# or to a Hugging Face Hub repo id (e.g. "your-hf-username/yoruba-xlsr-v4").
+# Only variants that are found are shown in the app. Copy the Kaggle output folder
+# /kaggle/working/models/V1..V4 into yoruba-asr/models/ to use the defaults below.
+models:
+  V1: "models/V1"
+  V2: "models/V2"
+  V3: "models/V3"
+  V4: "models/V4"
+results_dir: "results"
+default_model: "V4"
+max_cached_models: 2
+max_audio_seconds: 30

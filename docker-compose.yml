@@ -1,0 +1,11 @@
+services:
+  yoruba-asr:
+    build: .
+    image: yoruba-asr:1.0
+    container_name: yoruba-asr
+    ports:
+      - "7870:7870"            # open http://localhost:7870
+    volumes:
+      - ./models:/app/models:ro    # trained models V1-V4 (each folder has config.json + model.safetensors)
+      - ./results:/app/results:ro  # scores, tables and figures shown in the "Results" tab
+    restart: unless-stopped

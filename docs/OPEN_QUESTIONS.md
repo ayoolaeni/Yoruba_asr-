@@ -1,0 +1,9 @@
+# Open questions (things you must check)
+
+1. **ÌròyìnSpeech layout and audio licence.** The download location and file layout were not specified, so no URL is assumed. You must provide the audio plus a `manifest.csv` (`path,sentence,speaker`) as described in `DATA_SETUP.md`, and confirm the audio licence permits research use.
+2. **Tone quality of OOD transcripts.** Check `results/corpus_audit.md` after `prepare`. If SLR86 or ÌròyìnSpeech is marked `needs_manual_check`, listen to about 50 utterances before forcing its inclusion.
+3. **Size of the CPT unlabelled pool.** With Common Voice alone the pool is only CV `other` (~2 h, 1,152 clips). Twenty GPU hours of CPT on 2 h of audio risks overfitting the encoder and weakens the domain-adaptation treatment. Attach SLR86 and ÌròyìnSpeech before running `cpt`. If they are not available, discuss with your supervisor whether to shorten CPT (for example `EXTRA_OVERRIDES={"cpt.max_total_hours": 4}`) and record the decision.
+4. **MMS-TTS quality.** Coverage is verified (tones and sub-dots are representable; the macron is not), but naturalness is not. Listen to `results/V2/tts_listening_sample/` (50 clips) before training V2.
+5. **Actual Kaggle quota and speed.** The GPU-hour estimates are not measurements. Check `run_info.json` after V1 and adjust the plan. CPT speed decides how many steps fit into 20 h.
+6. **Local copy of Common Voice is incomplete.** The extracted folder on your PC holds 3,180 of 4,970 clips; 907 train/dev/test clips are missing, and `prepare` logged them as `corrupt`. The `.tar.gz` is complete, so upload the archive (not the folder) to Kaggle.
+7. **Test-set speaker count.** CV 27.0 Yoruba has few speakers (in the partial local copy: 4 train, 7 dev, 53 test). The speaker-block bootstrap is valid, but the CIs will be wide. Mention this in the limitations.

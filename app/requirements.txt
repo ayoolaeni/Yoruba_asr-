@@ -1,0 +1,15 @@
+# Web app requirements (CPU). Used by the Dockerfile and for a Hugging Face Space.
+# PyTorch: the Dockerfile installs the CPU build (torch==2.7.1) first; "torch" below is then already satisfied.
+torch
+transformers==4.57.0
+huggingface-hub==0.36.2
+tokenizers==0.22.1
+safetensors==0.5.3
+gradio==5.50.0
+librosa==0.11.0
+soundfile==0.14.0
+jiwer==4.0.0
+numpy==2.2.4
+scipy==1.16.0
+pandas==2.2.3
+PyYAML==6.0.2

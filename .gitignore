@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+_smoke/
+_nb_local/
+results/*
+!results/.gitkeep
+models/
+cache/
+checkpoints/
+augmented/
+tests/fixtures/data/
+_tmp/
+manifests/
+shared/
+YORUBA_ASR_OUTPUT.txt
+# thesis drafting notes (contain Common Voice test sentences)
+docs/CHAPTER4_RESULTS.md
+# Never commit Common Voice audio or text
+*.mp3
+cv-corpus-*/
+*.tar.gz
