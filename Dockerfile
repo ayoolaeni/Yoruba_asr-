@@ -7,6 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_DEFAULT_TIMEOUT=300 \
+    PIP_RETRIES=20 \
     HF_HUB_OFFLINE=1 \
     TRANSFORMERS_OFFLINE=1 \
     GRADIO_ANALYTICS_ENABLED=False \
@@ -14,8 +16,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     GRADIO_SERVER_PORT=7870 \
     MPLBACKEND=Agg
 
-# ffmpeg + libsndfile: decoding of mp3/m4a/ogg uploads and microphone recordings; curl: health check
-RUN apt-get update \
+# ffmpeg + libsndfile: decoding of mp3/m4a/ogg uploads and microphone recordings; curl: health check.
+# Retries/timeouts make the one-time download survive slow or unstable internet connections.
+RUN printf 'Acquire::Retries "10";\nAcquire::http::Timeout "300";\nAcquire::https::Timeout "300";\n' \
+      > /etc/apt/apt.conf.d/80-retries \
+ && apt-get update \
  && apt-get install -y --no-install-recommends ffmpeg libsndfile1 curl \
  && rm -rf /var/lib/apt/lists/*
 
